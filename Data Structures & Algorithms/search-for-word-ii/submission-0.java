@@ -1,0 +1,89 @@
+
+
+class Solution {
+
+    class TrieNode {
+            TrieNode[] children = new TrieNode[26];
+                    String word;
+                        }
+
+                            TrieNode root = new TrieNode();
+                                List<String> ans = new ArrayList<>();
+
+                                    public List<String> findWords(char[][] board, String[] words) {
+
+                                            // Build Trie
+                                                    for (String word : words) {
+                                                                insert(word);
+                                                                        }
+
+                                                                                int rows = board.length;
+                                                                                        int cols = board[0].length;
+
+                                                                                                // Start DFS from every cell
+                                                                                                        for (int r = 0; r < rows; r++) {
+                                                                                                                    for (int c = 0; c < cols; c++) {
+                                                                                                                                    dfs(board, r, c, root);
+                                                                                                                                                }
+                                                                                                                                                        }
+
+                                                                                                                                                                return ans;
+                                                                                                                                                                    }
+
+                                                                                                                                                                        private void insert(String word) {
+
+                                                                                                                                                                                TrieNode curr = root;
+
+                                                                                                                                                                                        for (char ch : word.toCharArray()) {
+
+                                                                                                                                                                                                    int idx = ch - 'a';
+
+                                                                                                                                                                                                                if (curr.children[idx] == null) {
+                                                                                                                                                                                                                                curr.children[idx] = new TrieNode();
+                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                        curr = curr.children[idx];
+                                                                                                                                                                                                                                                                }
+
+                                                                                                                                                                                                                                                                        curr.word = word;
+                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                private void dfs(char[][] board, int r, int c, TrieNode node) {
+
+                                                                                                                                                                                                                                                                                        // Boundary + visited check
+                                                                                                                                                                                                                                                                                                if (r < 0 || c < 0 ||
+                                                                                                                                                                                                                                                                                                            r >= board.length ||
+                                                                                                                                                                                                                                                                                                                        c >= board[0].length ||
+                                                                                                                                                                                                                                                                                                                                    board[r][c] == '#') {
+                                                                                                                                                                                                                                                                                                                                                return;
+                                                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                                                char ch = board[r][c];
+
+                                                                                                                                                                                                                                                                                                                                                                        // Trie path doesn't exist
+                                                                                                                                                                                                                                                                                                                                                                                if (node.children[ch - 'a'] == null) {
+                                                                                                                                                                                                                                                                                                                                                                                            return;
+                                                                                                                                                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                                                                                                                                                            node = node.children[ch - 'a'];
+
+                                                                                                                                                                                                                                                                                                                                                                                                                    // Word found
+                                                                                                                                                                                                                                                                                                                                                                                                                            if (node.word != null) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                        ans.add(node.word);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    // Avoid duplicates
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                node.word = null;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // Mark visited
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        board[r][c] = '#';
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                dfs(board, r + 1, c, node); // down
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        dfs(board, r - 1, c, node); // up
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                dfs(board, r, c + 1, node); // right
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        dfs(board, r, c - 1, node); // left
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // Backtrack
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        board[r][c] = ch;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
