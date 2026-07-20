@@ -1,0 +1,66 @@
+class Solution {
+
+        HashMap<String, String> parent = new HashMap<>();
+            HashMap<String, Double> weight = new HashMap<>();
+
+                private String find(String x) {
+                        if (!parent.get(x).equals(x)) {
+                                    String p = parent.get(x);
+                                                String root = find(p);
+
+                                                            weight.put(x, weight.get(x) * weight.get(p));
+                                                                        parent.put(x, root);
+                                                                                }
+                                                                                        return parent.get(x);
+                                                                                            }
+
+                                                                                                private void union(String a, String b, double value) {
+                                                                                                        if (!parent.containsKey(a)) {
+                                                                                                                    parent.put(a, a);
+                                                                                                                                weight.put(a, 1.0);
+                                                                                                                                        }
+
+                                                                                                                                                if (!parent.containsKey(b)) {
+                                                                                                                                                            parent.put(b, b);
+                                                                                                                                                                        weight.put(b, 1.0);
+                                                                                                                                                                                }
+
+                                                                                                                                                                                        String rootA = find(a);
+                                                                                                                                                                                                String rootB = find(b);
+
+                                                                                                                                                                                                        if (!rootA.equals(rootB)) {
+                                                                                                                                                                                                                    parent.put(rootA, rootB);
+                                                                                                                                                                                                                                weight.put(rootA, value * weight.get(b) / weight.get(a));
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+
+                                                                                                                                                                                                                                                        for (int i = 0; i < equations.size(); i++) {
+                                                                                                                                                                                                                                                                    union(equations.get(i).get(0), equations.get(i).get(1), values[i]);
+                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                    double[] ans = new double[queries.size()];
+
+                                                                                                                                                                                                                                                                                            for (int i = 0; i < queries.size(); i++) {
+
+                                                                                                                                                                                                                                                                                                        String a = queries.get(i).get(0);
+                                                                                                                                                                                                                                                                                                                    String b = queries.get(i).get(1);
+
+                                                                                                                                                                                                                                                                                                                                if (!parent.containsKey(a) || !parent.containsKey(b)) {
+                                                                                                                                                                                                                                                                                                                                                ans[i] = -1.0;
+                                                                                                                                                                                                                                                                                                                                                            } else {
+                                                                                                                                                                                                                                                                                                                                                                            String rootA = find(a);
+                                                                                                                                                                                                                                                                                                                                                                                            String rootB = find(b);
+
+                                                                                                                                                                                                                                                                                                                                                                                                            if (!rootA.equals(rootB)) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                ans[i] = -1.0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                } else {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ans[i] = weight.get(a) / weight.get(b);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return ans;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
